@@ -1,5 +1,5 @@
-import React, { useEffect, useState, ChangeEvent } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState, ChangeEvent, FormEvent } from "react";
+import { Link, useHistory } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { Map, TileLayer, Marker } from "react-leaflet";
 import { LeafletMouseEvent } from "leaflet";
@@ -23,7 +23,14 @@ interface IBGECitiesResponse {
 }
 
 const CreatePoint: React.FC = () => {
+  const history = useHistory();
+
   const [services, setServices] = useState<Service[]>([]);
+  const [formData, setFormData] = useState({
+    name: "",
+    whatsapp: "",
+    email: "",
+  });
   const [ufs, setUfs] = useState<string[]>([]);
   const [selectedUf, setSelectedUf] = useState("0");
   const [cities, setCities] = useState<string[]>([]);
@@ -36,7 +43,7 @@ const CreatePoint: React.FC = () => {
     0,
     0,
   ]);
-
+  const [selectedService, setSelectedService] = useState<number[]>([0]);
   //Load initial position
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -98,6 +105,40 @@ const CreatePoint: React.FC = () => {
     setSelectedPosition([lat, lng]);
   }
 
+  function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
+    const { name, value } = event.target;
+
+    setFormData({ ...formData, [name]: value });
+  }
+
+  function handleSelectService(id: number) {
+    setSelectedService([id]);
+  }
+
+  async function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+
+    const { name, email, whatsapp } = formData;
+    const uf = selectedUf;
+    const city = selectedCity;
+    const services_id = Number(selectedService);
+    const [latitude, longitude] = selectedPositon;
+
+    const data = {
+      name,
+      email,
+      whatsapp,
+      latitude,
+      longitude,
+      city,
+      uf,
+      services_id,
+    };
+
+    await api.post("/points", data);
+    history.push("/");
+  }
+
   return (
     <Container>
       <Content>
@@ -109,7 +150,7 @@ const CreatePoint: React.FC = () => {
             Voltar para página incial
           </Link>
         </header>
-        <Form>
+        <Form onSubmit={handleSubmit}>
           <h1>
             Cadastro do <br /> seu estabelecimento{" "}
           </h1>
@@ -121,18 +162,33 @@ const CreatePoint: React.FC = () => {
 
             <div className="field">
               <label htmlFor="name">Nome do estabelecimento</label>
-              <input type="text" name="name" id="name" />
+              <input
+                type="text"
+                name="name"
+                id="name"
+                onChange={handleInputChange}
+              />
             </div>
 
             <div className="field-group">
               <div className="field">
                 <label htmlFor="email">E-mail</label>
-                <input type="email" name="email" id="email" />
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  onChange={handleInputChange}
+                />
               </div>
 
               <div className="field">
                 <label htmlFor="whatsapp">Whatsapp</label>
-                <input type="text" name="whatsapp" id="whatsapp" />
+                <input
+                  type="text"
+                  name="whatsapp"
+                  id="whatsapp"
+                  onChange={handleInputChange}
+                />
               </div>
             </div>
           </fieldset>
@@ -196,7 +252,13 @@ const CreatePoint: React.FC = () => {
 
             <ul className="items-grid">
               {services.map((service) => (
-                <li key={service.id}>
+                <li
+                  key={service.id}
+                  onClick={() => handleSelectService(service.id)}
+                  className={
+                    selectedService.includes(service.id) ? "selected" : ""
+                  }
+                >
                   <img
                     className="service__image"
                     src={service.image_url}
