@@ -25,7 +25,7 @@ export const Content = styled.div`
 
     .content__logo {
       font-family: "Homemade Apple", sans-serif;
-      font-size: 28px;
+      font-size: 24px;
       padding: 0 10px;
       background: linear-gradient(0.25turn, #5e5eff, #000045);
       background-clip: text;

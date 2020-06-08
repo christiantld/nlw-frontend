@@ -9,10 +9,10 @@ const Home: React.FC = () => {
     <Container>
       <Content>
         <header>
-          <h2 className="content__logo">Quartier</h2>
+          <h2 className="content__logo">Do Bairro</h2>
         </header>
         <main>
-          <h1 className="content__main__logo">Quartier</h1>
+          <h1 className="content__main__logo">Do Bairro</h1>
           <p className="content__main__description">
             Uma forma simples de conectar a comunidade de moradores com o
             comércio local.

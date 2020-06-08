@@ -17,7 +17,7 @@ export const Content = styled.div`
 
     .content__logo {
       font-family: "Homemade Apple", sans-serif;
-      font-size: 28px;
+      font-size: 24px;
       padding: 0 18px;
       background: linear-gradient(0.25turn, #5e5eff, #000045);
       background-clip: text;
@@ -167,8 +167,8 @@ export const Form = styled.form`
       list-style: none;
 
       li {
-        background: ${lighten(0.2, "#fccd3c")};
-        border: 2px solid #90aeff;
+        background: ${darken(0.02, "#90aeff")};
+        border: 2px solid #fccd3c;
         height: 180px;
         border-radius: 8px;
         padding: 32px 24px 16px;
@@ -188,7 +188,7 @@ export const Form = styled.form`
         }
 
         &.selected {
-          background: ${lighten(0.2, "#f53b6b")};
+          background: ${lighten(0.2, "#fccd3c")};
           border: 2px solid #90aeff;
           box-shadow: 0 0 8px #90aeff;
         }

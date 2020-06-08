@@ -5,6 +5,8 @@ import { Map, TileLayer, Marker } from "react-leaflet";
 import { LeafletMouseEvent } from "leaflet";
 import axios from "axios";
 import api from "../../services/api";
+import Dropzone from "../../components/Dropzone";
+import Confirmation from "./Confirmation";
 
 import { Container, Content, Form } from "./styles";
 
@@ -44,6 +46,8 @@ const CreatePoint: React.FC = () => {
     0,
   ]);
   const [selectedService, setSelectedService] = useState<number[]>([0]);
+  const [selectedFile, setSelectedFile] = useState<File>();
+  const [confirmation, setConfirmation] = useState(false);
   //Load initial position
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -124,26 +128,36 @@ const CreatePoint: React.FC = () => {
     const services_id = Number(selectedService);
     const [latitude, longitude] = selectedPositon;
 
-    const data = {
-      name,
-      email,
-      whatsapp,
-      latitude,
-      longitude,
-      city,
-      uf,
-      services_id,
-    };
+    const data = new FormData();
+
+    data.append("name", name);
+    data.append("email", email);
+    data.append("whatsapp", whatsapp);
+    data.append("latitude", String(latitude));
+    data.append("longitude", String(longitude));
+    data.append("city", city);
+    data.append("uf", uf);
+    data.append("services_id", String(services_id));
+
+    if (selectedFile) {
+      data.append("image", selectedFile);
+    }
 
     await api.post("/points", data);
-    history.push("/");
+
+    setConfirmation(true);
+
+    setTimeout(() => {
+      history.push("/");
+    }, 3500);
   }
 
   return (
     <Container>
       <Content>
+        {confirmation && <Confirmation />}
         <header>
-          <h2 className="content__logo">Quartier</h2>
+          <h2 className="content__logo">Do Bairro</h2>
 
           <Link to="/">
             <FiArrowLeft />
@@ -155,6 +169,7 @@ const CreatePoint: React.FC = () => {
             Cadastro do <br /> seu estabelecimento{" "}
           </h1>
 
+          <Dropzone onFileUploaded={setSelectedFile} />
           <fieldset>
             <legend>
               <h2>Dados</h2>
