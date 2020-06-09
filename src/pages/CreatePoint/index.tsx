@@ -32,6 +32,7 @@ const CreatePoint: React.FC = () => {
     name: "",
     whatsapp: "",
     email: "",
+    site: "",
   });
   const [ufs, setUfs] = useState<string[]>([]);
   const [selectedUf, setSelectedUf] = useState("0");
@@ -122,7 +123,7 @@ const CreatePoint: React.FC = () => {
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    const { name, email, whatsapp } = formData;
+    const { name, email, whatsapp, site } = formData;
     const uf = selectedUf;
     const city = selectedCity;
     const services_id = Number(selectedService);
@@ -133,6 +134,7 @@ const CreatePoint: React.FC = () => {
     data.append("name", name);
     data.append("email", email);
     data.append("whatsapp", whatsapp);
+    data.append("site", site);
     data.append("latitude", String(latitude));
     data.append("longitude", String(longitude));
     data.append("city", city);
@@ -205,6 +207,16 @@ const CreatePoint: React.FC = () => {
                   onChange={handleInputChange}
                 />
               </div>
+            </div>
+            <div className="field">
+              <label htmlFor="site">Site</label>
+              <input
+                type="text"
+                name="site"
+                id="site"
+                placeholder="www.seusite.com.br"
+                onChange={handleInputChange}
+              />
             </div>
           </fieldset>
 
